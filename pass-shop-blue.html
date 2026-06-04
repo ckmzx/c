@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>패스숍 | 학원 물품 구매희망 접수</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --card-soft: #f8fbff;
+      --text: #1c2430;
+      --muted: #647184;
+      --line: #dbe5f0;
+      --accent: #2f6fb3;
+      --accent-dark: #24588f;
+      --accent-soft: #e9f2fd;
+      --note: #eef5ff;
+      --note-line: #c8daf5;
+      --shadow: 0 12px 32px rgba(28, 43, 68, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+      background:
+        radial-gradient(circle at top right, #ddeafb 0, transparent 30%),
+        radial-gradient(circle at left bottom, #edf4ff 0, transparent 24%),
+        var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    img { display: block; max-width: 100%; height: auto; }
+
+    .container {
+      width: min(980px, calc(100% - 32px));
+      margin: 40px auto 56px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f7fbff 100%);
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 36px 28px;
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      margin: 16px 0 10px;
+      font-size: clamp(30px, 5vw, 44px);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .lead {
+      margin: 0;
+      max-width: 760px;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 48px;
+      padding: 0 18px;
+      border-radius: 12px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: transform .15s ease, background-color .15s ease, border-color .15s ease;
+    }
+
+    .button.primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .button.primary:hover { background: var(--accent-dark); }
+
+    .button.secondary {
+      background: #fff;
+      color: var(--accent-dark);
+      border: 1px solid var(--line);
+    }
+
+    .button:hover { transform: translateY(-1px); }
+
+    .small {
+      margin-top: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .section {
+      margin-top: 22px;
+      background: var(--card-soft);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      padding: 24px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+    }
+
+    .section h2 {
+      margin: 0 0 10px;
+      font-size: 24px;
+    }
+
+    .section-copy {
+      margin: 0 0 16px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .product-list {
+      display: grid;
+      gap: 14px;
+    }
+
+    .product-item {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
+    }
+
+    .product-item[open] {
+      border-color: #bfd4ee;
+      box-shadow: 0 12px 26px rgba(45, 88, 144, 0.10);
+    }
+
+    .product-summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 22px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .product-summary::-webkit-details-marker { display: none; }
+
+    .product-main h3 {
+      margin: 0 0 8px;
+      font-size: 22px;
+    }
+
+    .meta {
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .meta li + li { margin-top: 4px; }
+
+    .summary-right {
+      text-align: right;
+      color: var(--accent-dark);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .product-body {
+      border-top: 1px solid var(--line);
+      padding: 0 22px 22px;
+      background: linear-gradient(180deg, #fcfdff 0%, #f7fbff 100%);
+    }
+
+    .product-body-inner {
+      padding-top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .product-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .photo-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.04);
+    }
+
+    .photo-frame {
+      aspect-ratio: 1 / 1;
+      background: linear-gradient(135deg, #edf4ff 0%, #f8fbff 100%);
+      display: grid;
+      place-items: center;
+      position: relative;
+    }
+
+    .photo-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .photo-fallback {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      padding: 16px;
+      text-align: center;
+      color: #7a8ca5;
+      font-size: 13px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #edf4ff 0%, #f8fbff 100%);
+    }
+
+    .photo-caption {
+      padding: 10px 12px;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--line);
+      background: #fff;
+    }
+
+    .guide-wrap {
+      display: grid;
+      gap: 14px;
+    }
+
+    .steps {
+      margin: 0;
+      padding-left: 20px;
+    }
+
+    .steps li + li { margin-top: 8px; }
+
+    .notice {
+      padding: 16px 18px;
+      border-radius: 16px;
+      background: var(--note);
+      border: 1px solid var(--note-line);
+      font-size: 15px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    code.inline-path {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #eef3fa;
+      color: #355171;
+      font-size: 13px;
+    }
+
+    @media (max-width: 720px) {
+      .container { margin-top: 20px; }
+      .hero { padding: 28px 20px; border-radius: 22px; }
+      .section, .product-summary, .product-body { padding-left: 18px; padding-right: 18px; }
+      .actions { flex-direction: column; }
+      .button { width: 100%; }
+      .photo-grid { grid-template-columns: 1fr; }
+      .product-summary { grid-template-columns: 1fr; }
+      .summary-right { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <section class="hero">
+      <span class="eyebrow">PASS SHOP · ACADEMY GOODS</span>
+      <h1>학원 물품 구매희망 접수</h1>
+      <p class="lead">
+        학원 티셔츠, 바람막이, 양말, 반바지의 구매희망을 받는 안내 페이지입니다.
+        이 페이지에서는 온라인 결제를 받지 않으며, 최종 결제는 학원에서 오프라인으로만 진행됩니다.
+      </p>
+
+      <div class="actions">
+        <a class="button primary" href="https://forms.gle/여기에-구글폼-주소" target="_blank" rel="noopener noreferrer">구매희망 제출하기</a>
+        <a class="button secondary" href="#products">신청 가능 제품 보기</a>
+      </div>
+      <p class="small">※ 제출만으로 주문이 확정되지 않습니다.</p>
+    </section>
+
+    <section class="section" id="products">
+      <h2>신청 가능 제품</h2>
+      <p class="section-copy">카드를 눌러 열면 제품 설명과 사진 영역을 함께 볼 수 있습니다. 실제 사진 파일을 넣으면 자동으로 표시되고, 아직 파일이 없으면 안내 박스로 보입니다.</p>
+
+      <div class="product-list">
+        <details class="product-item">
+          <summary class="product-summary">
+            <div class="product-main">
+              <h3>학원 티셔츠</h3>
+              <ul class="meta">
+                <li>예상 가격: 20,000원</li>
+                <li>사이즈: S / M / L / XL</li>
+                <li>색상: 추후 공지</li>
+              </ul>
+            </div>
+            <div class="summary-right">눌러서 사진 보기</div>
+          </summary>
+          <div class="product-body">
+            <div class="product-body-inner">
+              <p class="product-note">이미지를 추가하려면 같은 저장소에 <code class="inline-path">assets/tshirt-1.jpg</code>, <code class="inline-path">assets/tshirt-2.jpg</code>, <code class="inline-path">assets/tshirt-3.jpg</code> 파일을 넣으면 됩니다.</p>
+              <div class="photo-grid">
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/tshirt-1.jpg" alt="학원 티셔츠 제품 사진 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">티셔츠 사진 1<br>assets/tshirt-1.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">앞면 또는 대표 이미지</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/tshirt-2.jpg" alt="학원 티셔츠 제품 사진 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">티셔츠 사진 2<br>assets/tshirt-2.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">뒷면 또는 착용 예시</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/tshirt-3.jpg" alt="학원 티셔츠 제품 사진 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">티셔츠 사진 3<br>assets/tshirt-3.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">로고 또는 디테일 컷</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="product-item">
+          <summary class="product-summary">
+            <div class="product-main">
+              <h3>학원 바람막이</h3>
+              <ul class="meta">
+                <li>예상 가격: 45,000원</li>
+                <li>사이즈: M / L / XL / 2XL</li>
+                <li>색상: 추후 공지</li>
+              </ul>
+            </div>
+            <div class="summary-right">눌러서 사진 보기</div>
+          </summary>
+          <div class="product-body">
+            <div class="product-body-inner">
+              <p class="product-note">이미지를 추가하려면 <code class="inline-path">assets/windbreaker-1.jpg</code>부터 3장까지 넣어두면 됩니다.</p>
+              <div class="photo-grid">
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/windbreaker-1.jpg" alt="학원 바람막이 제품 사진 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">바람막이 사진 1<br>assets/windbreaker-1.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">대표 이미지</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/windbreaker-2.jpg" alt="학원 바람막이 제품 사진 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">바람막이 사진 2<br>assets/windbreaker-2.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">뒷면 또는 착용 컷</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/windbreaker-3.jpg" alt="학원 바람막이 제품 사진 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">바람막이 사진 3<br>assets/windbreaker-3.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">디테일 컷</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="product-item">
+          <summary class="product-summary">
+            <div class="product-main">
+              <h3>양말</h3>
+              <ul class="meta">
+                <li>예상 가격: 추후 공지</li>
+                <li>사이즈: FREE 또는 구간별 운영</li>
+                <li>색상: 추후 공지</li>
+              </ul>
+            </div>
+            <div class="summary-right">눌러서 사진 보기</div>
+          </summary>
+          <div class="product-body">
+            <div class="product-body-inner">
+              <p class="product-note">이미지를 추가하려면 <code class="inline-path">assets/socks-1.jpg</code>부터 3장까지 넣으면 됩니다.</p>
+              <div class="photo-grid">
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/socks-1.jpg" alt="양말 제품 사진 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">양말 사진 1<br>assets/socks-1.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">대표 이미지</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/socks-2.jpg" alt="양말 제품 사진 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">양말 사진 2<br>assets/socks-2.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">패키지 또는 로고 컷</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/socks-3.jpg" alt="양말 제품 사진 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">양말 사진 3<br>assets/socks-3.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">착용 또는 디테일 컷</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </details>
+
+        <details class="product-item">
+          <summary class="product-summary">
+            <div class="product-main">
+              <h3>반바지</h3>
+              <ul class="meta">
+                <li>예상 가격: 추후 공지</li>
+                <li>사이즈: S / M / L / XL 또는 90~110</li>
+                <li>색상: 추후 공지</li>
+              </ul>
+            </div>
+            <div class="summary-right">눌러서 사진 보기</div>
+          </summary>
+          <div class="product-body">
+            <div class="product-body-inner">
+              <p class="product-note">이미지를 추가하려면 <code class="inline-path">assets/shorts-1.jpg</code>부터 3장까지 넣으면 됩니다.</p>
+              <div class="photo-grid">
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/shorts-1.jpg" alt="반바지 제품 사진 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">반바지 사진 1<br>assets/shorts-1.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">대표 이미지</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/shorts-2.jpg" alt="반바지 제품 사진 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">반바지 사진 2<br>assets/shorts-2.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">뒷면 또는 디테일 컷</figcaption>
+                </figure>
+                <figure class="photo-card">
+                  <div class="photo-frame">
+                    <img src="assets/shorts-3.jpg" alt="반바지 제품 사진 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='grid';">
+                    <div class="photo-fallback">반바지 사진 3<br>assets/shorts-3.jpg</div>
+                  </div>
+                  <figcaption class="photo-caption">착용 예시</figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="section" id="guide">
+      <h2>신청 방법</h2>
+      <div class="guide-wrap">
+        <ol class="steps">
+          <li>위의 <strong>구매희망 제출하기</strong> 버튼을 눌러 구글폼으로 이동합니다.</li>
+          <li>이름, 반, 연락처, 품목, 사이즈, 수량을 입력합니다.</li>
+          <li>제출 후 학원에서 신청 내용을 확인합니다.</li>
+          <li>최종 안내를 받은 뒤 학원에서 직접 결제하면 완료됩니다.</li>
+        </ol>
+
+        <div class="notice">
+          <div>※ 안내 문구 예시</div>
+          <div>본 페이지는 온라인 판매 페이지가 아니라 구매희망 및 수요 확인용 안내 페이지입니다.</div>
+          <div>실제 주문 확정 및 결제는 학원 현장에서 별도로 진행됩니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer">문의: 학원 데스크 또는 담당 선생님</p>
+  </main>
+</body>
+</html>
